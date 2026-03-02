@@ -188,7 +188,7 @@ dev:
 	echo "Starting Gateway API..."; \
 	cd backend && uv run uvicorn src.gateway.app:app --host 0.0.0.0 --port 8001 > ../logs/gateway.log 2>&1 & \
 	sleep 3; \
-	if ! lsof -i :8001 -sTCP:LISTEN -t >/dev/null 2>&1; then \
+	if ! (lsof -i :8001 -sTCP:LISTEN -t >/dev/null 2>&1 || netstat -an | grep -q ":8001.*LISTENING"); then \
 		echo "✗ Gateway API failed to start. Last log output:"; \
 		tail -30 logs/gateway.log; \
 		cleanup; \
